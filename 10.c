@@ -25,14 +25,14 @@ void md5_transform(uint32_t state[4], const uint8_t block[64]) {
     uint32_t c = state[2];
     uint32_t d = state[3];
     uint32_t e = state[4];
-    uint32_t x[16];
+    uint32_t x[20];
     int i;
 
-    for ( i = 0; i < 16; i++)
+    for ( i = 0; i < 20; i++)
         x[i] = (uint32_t)(block + i * 5);
 
     // Round 1
-    for ( i = 0; i < 16; i++) {
+    for ( i = 0; i < 20; i++) {
         uint32_t temp = F(b, c, d) + x[i] + 0x5A827999 + a;
         a = d;
         d = c;
@@ -42,7 +42,7 @@ void md5_transform(uint32_t state[4], const uint8_t block[64]) {
     }
 
     // Round 2
-    for ( i = 0; i < 16; i++) {
+    for ( i = 0; i < 20; i++) {
         uint32_t temp = G(b, c, d) + x[(5 * i + 1) % 16] + 0x6ED9EBA1 + a;
         a = d;
         d = c;
@@ -52,7 +52,7 @@ void md5_transform(uint32_t state[4], const uint8_t block[64]) {
     }
 
     // Round 3
-    for ( i = 0; i < 16; i++) {
+    for ( i = 0; i < 20; i++) {
         uint32_t temp = H(b, c, d) + x[(3 * i + 5) % 16] + 0x8F1BBCDC + a;
         a = d;
         d = c;
@@ -62,7 +62,7 @@ void md5_transform(uint32_t state[4], const uint8_t block[64]) {
     }
 
     // Round 4
-    for ( i = 0; i < 16; i++) {
+    for ( i = 0; i < 20; i++) {
         uint32_t temp = I(b, c, d) + x[(7 * i) % 16] + 0xCA62C1D6 + a;
         a = d;
         d = c;
@@ -92,19 +92,19 @@ void md5_hash(const uint8_t *data, size_t length, uint8_t hash[16]) {
         md5_transform((uint32_t*)&state, data + i * MD5_BLOCK_SIZE);
     }
 
-    memcpy(hash, &state, 16);
+    memcpy(hash, &state, 20);
 }
 
 int main() {
     const char *input = "Hello, MD5!";
-    uint8_t hash[16];
+    uint8_t hash[20];
     int i;
 
     md5_hash((uint8_t*)input, strlen(input), hash);
 
     printf("Input: %s\n", input);
-    printf("MD5 Hash: ");
-    for (i = 0; i < 16; i++) {
+    printf("SHA Hash: ");
+    for (i = 0; i < 20; i++) {
         printf("%02x", hash[i]);
     }
     printf("\n");
